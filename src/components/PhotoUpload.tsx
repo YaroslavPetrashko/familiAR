@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Upload, Image as ImageIcon, X } from 'lucide-react';
-import heic2any from 'heic2any';
 import AudioRecorder from './AudioRecorder';
 
 interface PhotoUploadProps {
@@ -32,18 +31,7 @@ export function PhotoUpload({ onUploadSuccess }: PhotoUploadProps) {
       setError('');
 
       if (isHeic) {
-        try {
-          const convertedBlob = await heic2any({
-            blob: file,
-            toType: 'image/jpeg',
-            quality: 0.8,
-          });
-          const blobArray = Array.isArray(convertedBlob) ? convertedBlob : [convertedBlob];
-          setPreviewUrl(URL.createObjectURL(blobArray[0]));
-        } catch (err) {
-          console.error('Error converting HEIC:', err);
-          setError('Error processing HEIC file');
-        }
+        setPreviewUrl(null);
       } else {
         setPreviewUrl(URL.createObjectURL(file));
       }
@@ -175,7 +163,7 @@ export function PhotoUpload({ onUploadSuccess }: PhotoUploadProps) {
             Photo
           </label>
 
-          {!previewUrl ? (
+          {!imageFile ? (
             <label className="group flex flex-col items-center justify-center w-full h-72 border-2 border-dashed border-gray-600 rounded-2xl cursor-pointer hover:border-blue-500 hover:bg-gray-700/30 transition-all duration-300 bg-gray-900/50">
               <div className="flex flex-col items-center justify-center pt-5 pb-6">
                 <div className="bg-gray-700/50 p-4 rounded-xl mb-4 group-hover:bg-blue-600/20 transition-colors duration-300">
@@ -193,13 +181,30 @@ export function PhotoUpload({ onUploadSuccess }: PhotoUploadProps) {
                 onChange={handleFileChange}
               />
             </label>
-          ) : (
+          ) : previewUrl ? (
             <div className="relative bg-gray-900/50 rounded-2xl overflow-hidden border border-gray-700/50">
               <img
                 src={previewUrl}
                 alt="Preview"
                 className="w-full h-96 object-contain rounded-2xl"
               />
+              <button
+                type="button"
+                onClick={clearImage}
+                className="absolute top-3 right-3 bg-red-500/90 backdrop-blur-sm text-white p-2.5 rounded-xl hover:bg-red-600 transition-all duration-200 shadow-lg hover:scale-110"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          ) : (
+            <div className="relative bg-gray-900/50 rounded-2xl overflow-hidden border border-gray-700/50 p-8">
+              <div className="flex flex-col items-center justify-center h-80">
+                <div className="bg-gray-700/50 p-4 rounded-xl mb-4">
+                  <ImageIcon className="w-12 h-12 text-gray-400" />
+                </div>
+                <p className="text-lg text-gray-300 font-semibold mb-2">{imageFile.name}</p>
+                <p className="text-sm text-gray-400 mb-6">HEIC files cannot be previewed</p>
+              </div>
               <button
                 type="button"
                 onClick={clearImage}

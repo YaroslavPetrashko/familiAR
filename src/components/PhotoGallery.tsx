@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase, MemoryPhoto } from '../lib/supabase';
-import { Images, MapPin, Calendar, Trash2, Mic } from 'lucide-react';
-import { HeicImage } from './HeicImage';
+import { Images, MapPin, Calendar, Trash2, Mic, Image as ImageIcon } from 'lucide-react';
 
 interface PhotoGalleryProps {
   refreshTrigger: number;
@@ -109,11 +108,17 @@ export function PhotoGallery({ refreshTrigger }: PhotoGalleryProps) {
             className="group relative bg-gradient-to-br from-gray-700/50 to-gray-800/50 border border-gray-600/50 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 hover:scale-[1.02] hover:border-gray-500/50"
           >
             <div className="aspect-square overflow-hidden bg-gray-900/50">
-              <HeicImage
-                src={photo.image_url}
-                alt={photo.person_name}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-              />
+              {photo.image_url.toLowerCase().includes('.heic') || photo.image_url.toLowerCase().includes('.heif') ? (
+                <div className="w-full h-full flex items-center justify-center bg-gray-800/50">
+                  <ImageIcon className="w-16 h-16 text-gray-500" />
+                </div>
+              ) : (
+                <img
+                  src={photo.image_url}
+                  alt={photo.person_name}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+              )}
             </div>
 
             <div className="p-5">
