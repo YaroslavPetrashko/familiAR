@@ -41,23 +41,28 @@ export function AuthForm({ onAuthSuccess }: AuthFormProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center p-4">
-      <div className="bg-gray-800 rounded-2xl shadow-xl p-8 w-full max-w-md border border-gray-700">
-        <div className="flex items-center justify-center mb-8">
-          <img src="/image.png" alt="FamiliAR" className="w-20 h-20" />
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4">
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-3xl blur-3xl"></div>
+        <div className="relative bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-xl rounded-3xl shadow-2xl p-10 w-full max-w-md border border-gray-700/50">
+          <div className="flex items-center justify-center mb-8">
+            <div className="relative">
+              <div className="absolute inset-0 bg-blue-500/30 rounded-2xl blur-2xl"></div>
+              <img src="/image.png" alt="FamiliAR" className="w-24 h-24 relative z-10" />
+            </div>
+          </div>
 
-        <h1 className="text-2xl font-bold text-center mb-2 text-white">
-          FamiliAR
-        </h1>
-        <p className="text-center text-gray-400 mb-8">
-          Memory Care Portal
-        </p>
+          <h1 className="text-3xl font-bold text-center mb-2 text-white tracking-tight">
+            FamiliAR
+          </h1>
+          <p className="text-center text-gray-400 mb-10 font-medium">
+            Memory Care Portal
+          </p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
-              Email
+            <label htmlFor="email" className="block text-sm font-semibold text-gray-300 mb-2">
+              Email Address
             </label>
             <input
               id="email"
@@ -65,13 +70,13 @@ export function AuthForm({ onAuthSuccess }: AuthFormProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition placeholder-gray-400"
+              className="w-full px-4 py-3.5 bg-gray-700/50 border border-gray-600 text-white rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 placeholder-gray-400 hover:bg-gray-700/70"
               placeholder="you@example.com"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-1">
+            <label htmlFor="password" className="block text-sm font-semibold text-gray-300 mb-2">
               Password
             </label>
             <input
@@ -81,13 +86,13 @@ export function AuthForm({ onAuthSuccess }: AuthFormProps) {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
-              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition placeholder-gray-400"
+              className="w-full px-4 py-3.5 bg-gray-700/50 border border-gray-600 text-white rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 placeholder-gray-400 hover:bg-gray-700/70"
               placeholder="••••••••"
             />
           </div>
 
           {error && (
-            <div className="bg-red-900/50 text-red-300 px-4 py-3 rounded-lg text-sm border border-red-800">
+            <div className="bg-red-900/50 text-red-300 px-4 py-3.5 rounded-xl text-sm border border-red-800/50 backdrop-blur-sm">
               {error}
             </div>
           )}
@@ -95,19 +100,20 @@ export function AuthForm({ onAuthSuccess }: AuthFormProps) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3.5 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 transform hover:scale-[1.02] active:scale-[0.98]"
           >
             {loading ? 'Please wait...' : isLogin ? 'Sign In' : 'Sign Up'}
           </button>
         </form>
 
-        <div className="mt-6 text-center">
+        <div className="mt-8 text-center">
           <button
             onClick={() => setIsLogin(!isLogin)}
-            className="text-blue-400 hover:text-blue-300 text-sm font-medium transition"
+            className="text-blue-400 hover:text-blue-300 text-sm font-semibold transition-colors duration-200"
           >
             {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
           </button>
+        </div>
         </div>
       </div>
     </div>
