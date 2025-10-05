@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { supabase, MemoryPhoto } from '../lib/supabase';
-import { Images, MapPin, Calendar, Trash2 } from 'lucide-react';
+import { Images, MapPin, Calendar, Trash2, Volume2, VolumeX } from 'lucide-react';
 import { HeicImage } from './HeicImage';
 
 interface PhotoGalleryProps {
@@ -11,6 +11,8 @@ export function PhotoGallery({ refreshTrigger }: PhotoGalleryProps) {
   const [photos, setPhotos] = useState<MemoryPhoto[]>([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [playingAudioId, setPlayingAudioId] = useState<string | null>(null);
+  const audioRefs = useRef<{ [key: string]: HTMLAudioElement }>({});
 
   const fetchPhotos = async () => {
     try {
@@ -32,6 +34,26 @@ export function PhotoGallery({ refreshTrigger }: PhotoGalleryProps) {
     fetchPhotos();
   }, [refreshTrigger]);
 
+  const toggleAudio = (photoId: string, audioUrl: string) => {
+    if (playingAudioId === photoId) {
+      audioRefs.current[photoId]?.pause();
+      setPlayingAudioId(null);
+    } else {
+      if (playingAudioId) {
+        audioRefs.current[playingAudioId]?.pause();
+      }
+
+      if (!audioRefs.current[photoId]) {
+        const audio = new Audio(audioUrl);
+        audio.onended = () => setPlayingAudioId(null);
+        audioRefs.current[photoId] = audio;
+      }
+
+      audioRefs.current[photoId].play();
+      setPlayingAudioId(photoId);
+    }
+  };
+
   const handleDelete = async (photo: MemoryPhoto) => {
     if (!confirm('Are you sure you want to delete this memory?')) return;
 
@@ -44,6 +66,18 @@ export function PhotoGallery({ refreshTrigger }: PhotoGalleryProps) {
           await supabase.storage
             .from('memories-photos')
             .remove([`${user.id}/${fileName}`]);
+        }
+      }
+
+      if (photo.audio_url) {
+        const audioFileName = photo.audio_url.split('/').pop();
+        if (audioFileName) {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            await supabase.storage
+              .from('memories-audio')
+              .remove([`${user.id}/${audioFileName}`]);
+          }
         }
       }
 
@@ -137,10 +171,30 @@ export function PhotoGallery({ refreshTrigger }: PhotoGalleryProps) {
                 )}
               </div>
 
+              {photo.audio_url && (
+                <button
+                  type="button"
+                  onClick={() => toggleAudio(photo.id, photo.audio_url!)}
+                  className="w-full mb-3 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-blue-400 hover:text-blue-300 hover:bg-blue-900/30 rounded-xl transition-all duration-200 border border-blue-900/30 hover:border-blue-900/50"
+                >
+                  {playingAudioId === photo.id ? (
+                    <>
+                      <VolumeX className="w-4 h-4" />
+                      Stop Audio
+                    </>
+                  ) : (
+                    <>
+                      <Volume2 className="w-4 h-4" />
+                      Play Audio
+                    </>
+                  )}
+                </button>
+              )}
+
               <button
                 onClick={() => handleDelete(photo)}
                 disabled={deletingId === photo.id}
-                className="w-full mt-3 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-900/30 rounded-xl transition-all duration-200 disabled:opacity-50 border border-red-900/30 hover:border-red-900/50"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-900/30 rounded-xl transition-all duration-200 disabled:opacity-50 border border-red-900/30 hover:border-red-900/50"
               >
                 <Trash2 className="w-4 h-4" />
                 {deletingId === photo.id ? 'Deleting...' : 'Delete Memory'}

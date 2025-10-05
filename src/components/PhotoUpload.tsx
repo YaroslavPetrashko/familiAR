@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Upload, Image as ImageIcon, X } from 'lucide-react';
 import heic2any from 'heic2any';
+import AudioRecorder from './AudioRecorder';
 
 interface PhotoUploadProps {
   onUploadSuccess: () => void;
@@ -13,6 +14,7 @@ export function PhotoUpload({ onUploadSuccess }: PhotoUploadProps) {
   const [event, setEvent] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
 
@@ -56,6 +58,14 @@ export function PhotoUpload({ onUploadSuccess }: PhotoUploadProps) {
     setPreviewUrl(null);
   };
 
+  const handleAudioRecorded = (blob: Blob) => {
+    setAudioBlob(blob);
+  };
+
+  const handleAudioRemoved = () => {
+    setAudioBlob(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -84,10 +94,28 @@ export function PhotoUpload({ onUploadSuccess }: PhotoUploadProps) {
         .from('memories-photos')
         .getPublicUrl(fileName);
 
+      let audioUrl = null;
+      if (audioBlob) {
+        const audioFileName = `${user.id}/${Date.now()}.webm`;
+        const { error: audioUploadError } = await supabase.storage
+          .from('memories-audio')
+          .upload(audioFileName, audioBlob);
+
+        if (audioUploadError) {
+          console.error('Audio upload error:', audioUploadError);
+        } else {
+          const { data: { publicUrl: audioPublicUrl } } = supabase.storage
+            .from('memories-audio')
+            .getPublicUrl(audioFileName);
+          audioUrl = audioPublicUrl;
+        }
+      }
+
       const { error: dbError } = await supabase
         .from('memories_photos')
         .insert({
           image_url: publicUrl,
+          audio_url: audioUrl,
           person_name: personName,
           location,
           event,
@@ -99,6 +127,7 @@ export function PhotoUpload({ onUploadSuccess }: PhotoUploadProps) {
       setPersonName('');
       setLocation('');
       setEvent('');
+      setAudioBlob(null);
       clearImage();
       onUploadSuccess();
     } catch (err) {
@@ -205,6 +234,12 @@ export function PhotoUpload({ onUploadSuccess }: PhotoUploadProps) {
             />
           </div>
         </div>
+
+        <AudioRecorder
+          onAudioRecorded={handleAudioRecorded}
+          onAudioRemoved={handleAudioRemoved}
+          maxDuration={15}
+        />
 
         {error && (
           <div className="bg-red-900/50 text-red-300 px-4 py-3.5 rounded-xl text-sm border border-red-800/50 backdrop-blur-sm">
