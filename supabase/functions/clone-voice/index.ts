@@ -12,15 +12,15 @@ interface VoiceCloneRequest {
 }
 
 Deno.serve(async (req: Request) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, {
-      status: 204,
-      headers: corsHeaders,
-    });
-  }
-
   try {
-    const elevenlabsApiKey = "d66c79edf9e459cedc39041667eb8f1f28fbe11df3a4f8d74d3670e0ca8bf047"
+    if (req.method === "OPTIONS") {
+      return new Response(null, {
+        status: 204,
+        headers: corsHeaders,
+      });
+    }
+
+    const elevenlabsApiKey = Deno.env.get("ELEVENLABS_API_KEY");
 
     if (!elevenlabsApiKey) {
       return new Response(
@@ -32,11 +32,24 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    const { audioBlob, name } = await req.json() as VoiceCloneRequest;
+    let requestData: VoiceCloneRequest;
+    try {
+      requestData = await req.json() as VoiceCloneRequest;
+    } catch (jsonError) {
+      return new Response(
+        JSON.stringify({ error: "Invalid JSON in request body", success: false }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    const { audioBlob, name } = requestData;
 
     if (!audioBlob || !name) {
       return new Response(
-        JSON.stringify({ error: "Missing audioBlob or name" }),
+        JSON.stringify({ error: "Missing audioBlob or name", success: false }),
         {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -61,7 +74,16 @@ Deno.serve(async (req: Request) => {
     if (!response.ok) {
       const errorText = await response.text();
       console.error("ElevenLabs API error:", errorText);
-      throw new Error(`ElevenLabs API error: ${response.status} - ${errorText}`);
+      return new Response(
+        JSON.stringify({
+          error: `ElevenLabs API error: ${response.status} - ${errorText}`,
+          success: false
+        }),
+        {
+          status: response.status,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
     }
 
     const result = await response.json();
@@ -72,6 +94,7 @@ Deno.serve(async (req: Request) => {
         success: true
       }),
       {
+        status: 200,
         headers: {
           ...corsHeaders,
           "Content-Type": "application/json",
