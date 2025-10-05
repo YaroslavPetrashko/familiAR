@@ -48,7 +48,7 @@ export function AuthForm({ onAuthSuccess }: AuthFormProps) {
           <div className="flex items-center justify-center mb-8">
             <div className="relative">
               <div className="absolute inset-0 bg-blue-500/30 rounded-2xl blur-2xl"></div>
-              <img src="/image.png" alt="FamiliAR" className="w-24 h-24 relative z-10" />
+              <img src="/familiar.png" alt="FamiliAR" className="w-24 h-24 relative z-10" />
             </div>
           </div>
 

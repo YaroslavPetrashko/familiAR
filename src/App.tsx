@@ -57,7 +57,7 @@ function App() {
             <div className="flex items-center gap-4">
               <div className="relative">
                 <div className="absolute inset-0 bg-blue-500/20 rounded-xl blur-xl"></div>
-                <img src="/image.png" alt="FamiliAR" className="w-14 h-14 relative z-10" />
+                <img src="/familiar.png" alt="FamiliAR" className="w-14 h-14 relative z-10" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-white tracking-tight">FamiliAR</h1>
