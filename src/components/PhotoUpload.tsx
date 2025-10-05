@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Upload, Image as ImageIcon, X } from 'lucide-react';
+import heic2any from 'heic2any';
 
 interface PhotoUploadProps {
   onUploadSuccess: () => void;
@@ -15,16 +16,35 @@ export function PhotoUpload({ onUploadSuccess }: PhotoUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (!file.type.startsWith('image/')) {
+      const isHeic = file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif');
+
+      if (!file.type.startsWith('image/') && !isHeic) {
         setError('Please select an image file');
         return;
       }
+
       setImageFile(file);
-      setPreviewUrl(URL.createObjectURL(file));
       setError('');
+
+      if (isHeic) {
+        try {
+          const convertedBlob = await heic2any({
+            blob: file,
+            toType: 'image/jpeg',
+            quality: 0.8,
+          });
+          const blobArray = Array.isArray(convertedBlob) ? convertedBlob : [convertedBlob];
+          setPreviewUrl(URL.createObjectURL(blobArray[0]));
+        } catch (err) {
+          console.error('Error converting HEIC:', err);
+          setError('Error processing HEIC file');
+        }
+      } else {
+        setPreviewUrl(URL.createObjectURL(file));
+      }
     }
   };
 
@@ -110,12 +130,12 @@ export function PhotoUpload({ onUploadSuccess }: PhotoUploadProps) {
                 <p className="mb-2 text-sm text-gray-600">
                   <span className="font-semibold">Click to upload</span> or drag and drop
                 </p>
-                <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                <p className="text-xs text-gray-500">PNG, JPG, HEIC, GIF up to 10MB</p>
               </div>
               <input
                 type="file"
                 className="hidden"
-                accept="image/*"
+                accept="image/*,.heic,.heif"
                 onChange={handleFileChange}
               />
             </label>

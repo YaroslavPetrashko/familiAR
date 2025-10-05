@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase, MemoryPhoto } from '../lib/supabase';
 import { Images, MapPin, Calendar, Trash2 } from 'lucide-react';
+import { HeicImage } from './HeicImage';
 
 interface PhotoGalleryProps {
   refreshTrigger: number;
@@ -99,7 +100,7 @@ export function PhotoGallery({ refreshTrigger }: PhotoGalleryProps) {
             className="group relative bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl transition-shadow"
           >
             <div className="aspect-square overflow-hidden bg-gray-100">
-              <img
+              <HeicImage
                 src={photo.image_url}
                 alt={photo.person_name}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
