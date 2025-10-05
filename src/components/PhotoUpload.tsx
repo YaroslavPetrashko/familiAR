@@ -140,11 +140,11 @@ export function PhotoUpload({ onUploadSuccess }: PhotoUploadProps) {
               />
             </label>
           ) : (
-            <div className="relative">
+            <div className="relative bg-gray-100 rounded-xl">
               <img
                 src={previewUrl}
                 alt="Preview"
-                className="w-full h-64 object-cover rounded-xl"
+                className="w-full h-96 object-contain rounded-xl"
               />
               <button
                 type="button"
