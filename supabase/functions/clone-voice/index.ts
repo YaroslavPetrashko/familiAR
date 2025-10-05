@@ -20,7 +20,7 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const elevenlabsApiKey = Deno.env.get("ELEVENLABS_API_KEY");
+    const elevenlabsApiKey = "d66c79edf9e459cedc39041667eb8f1f28fbe11df3a4f8d74d3670e0ca8bf047"
 
     if (!elevenlabsApiKey) {
       return new Response(
