@@ -109,28 +109,28 @@ export function PhotoUpload({ onUploadSuccess }: PhotoUploadProps) {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6 max-w-2xl mx-auto">
+    <div className="bg-gray-800 rounded-2xl shadow-lg p-6 max-w-2xl mx-auto border border-gray-700">
       <div className="flex items-center gap-3 mb-6">
-        <div className="bg-blue-100 p-2 rounded-lg">
-          <Upload className="w-6 h-6 text-blue-600" />
+        <div className="bg-blue-600 p-2 rounded-lg">
+          <Upload className="w-6 h-6 text-white" />
         </div>
-        <h2 className="text-2xl font-bold text-gray-800">Upload New Memory</h2>
+        <h2 className="text-2xl font-bold text-white">Upload New Memory</h2>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-300 mb-2">
             Photo
           </label>
 
           {!previewUrl ? (
-            <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition">
+            <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-600 rounded-xl cursor-pointer hover:border-blue-500 hover:bg-gray-700 transition bg-gray-900">
               <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                <ImageIcon className="w-12 h-12 text-gray-400 mb-3" />
-                <p className="mb-2 text-sm text-gray-600">
+                <ImageIcon className="w-12 h-12 text-gray-500 mb-3" />
+                <p className="mb-2 text-sm text-gray-300">
                   <span className="font-semibold">Click to upload</span> or drag and drop
                 </p>
-                <p className="text-xs text-gray-500">PNG, JPG, HEIC, GIF up to 10MB</p>
+                <p className="text-xs text-gray-400">PNG, JPG, HEIC, GIF up to 10MB</p>
               </div>
               <input
                 type="file"
@@ -140,7 +140,7 @@ export function PhotoUpload({ onUploadSuccess }: PhotoUploadProps) {
               />
             </label>
           ) : (
-            <div className="relative bg-gray-100 rounded-xl">
+            <div className="relative bg-gray-900 rounded-xl">
               <img
                 src={previewUrl}
                 alt="Preview"
@@ -158,8 +158,8 @@ export function PhotoUpload({ onUploadSuccess }: PhotoUploadProps) {
         </div>
 
         <div>
-          <label htmlFor="personName" className="block text-sm font-medium text-gray-700 mb-1">
-            Person's Name <span className="text-red-500">*</span>
+          <label htmlFor="personName" className="block text-sm font-medium text-gray-300 mb-1">
+            Person's Name <span className="text-red-400">*</span>
           </label>
           <input
             id="personName"
@@ -167,13 +167,13 @@ export function PhotoUpload({ onUploadSuccess }: PhotoUploadProps) {
             value={personName}
             onChange={(e) => setPersonName(e.target.value)}
             required
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+            className="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition placeholder-gray-400"
             placeholder="e.g., Sarah Johnson"
           />
         </div>
 
         <div>
-          <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="location" className="block text-sm font-medium text-gray-300 mb-1">
             Location
           </label>
           <input
@@ -181,13 +181,13 @@ export function PhotoUpload({ onUploadSuccess }: PhotoUploadProps) {
             type="text"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+            className="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition placeholder-gray-400"
             placeholder="e.g., Central Park, New York"
           />
         </div>
 
         <div>
-          <label htmlFor="event" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="event" className="block text-sm font-medium text-gray-300 mb-1">
             Event
           </label>
           <input
@@ -195,13 +195,13 @@ export function PhotoUpload({ onUploadSuccess }: PhotoUploadProps) {
             type="text"
             value={event}
             onChange={(e) => setEvent(e.target.value)}
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+            className="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition placeholder-gray-400"
             placeholder="e.g., Birthday Celebration 2023"
           />
         </div>
 
         {error && (
-          <div className="bg-red-50 text-red-600 px-4 py-3 rounded-lg text-sm">
+          <div className="bg-red-900/50 text-red-300 px-4 py-3 rounded-lg text-sm border border-red-800">
             {error}
           </div>
         )}

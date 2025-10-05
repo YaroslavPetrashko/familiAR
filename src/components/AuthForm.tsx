@@ -41,24 +41,22 @@ export function AuthForm({ onAuthSuccess }: AuthFormProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center p-4">
+      <div className="bg-gray-800 rounded-2xl shadow-xl p-8 w-full max-w-md border border-gray-700">
         <div className="flex items-center justify-center mb-8">
-          <div className="bg-blue-100 p-3 rounded-full">
-            <LogIn className="w-8 h-8 text-blue-600" />
-          </div>
+          <img src="/image.png" alt="FamiliAR" className="w-20 h-20" />
         </div>
 
-        <h1 className="text-2xl font-bold text-center mb-2 text-gray-800">
-          Memory Care Portal
+        <h1 className="text-2xl font-bold text-center mb-2 text-white">
+          FamiliAR
         </h1>
-        <p className="text-center text-gray-600 mb-8">
-          Upload photos to help loved ones remember
+        <p className="text-center text-gray-400 mb-8">
+          Memory Care Portal
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
               Email
             </label>
             <input
@@ -67,13 +65,13 @@ export function AuthForm({ onAuthSuccess }: AuthFormProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition placeholder-gray-400"
               placeholder="you@example.com"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-1">
               Password
             </label>
             <input
@@ -83,13 +81,13 @@ export function AuthForm({ onAuthSuccess }: AuthFormProps) {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition placeholder-gray-400"
               placeholder="••••••••"
             />
           </div>
 
           {error && (
-            <div className="bg-red-50 text-red-600 px-4 py-3 rounded-lg text-sm">
+            <div className="bg-red-900/50 text-red-300 px-4 py-3 rounded-lg text-sm border border-red-800">
               {error}
             </div>
           )}
@@ -106,7 +104,7 @@ export function AuthForm({ onAuthSuccess }: AuthFormProps) {
         <div className="mt-6 text-center">
           <button
             onClick={() => setIsLogin(!isLogin)}
-            className="text-blue-600 hover:text-blue-700 text-sm font-medium transition"
+            className="text-blue-400 hover:text-blue-300 text-sm font-medium transition"
           >
             {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
           </button>

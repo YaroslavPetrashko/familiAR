@@ -3,7 +3,7 @@ import { supabase } from './lib/supabase';
 import { AuthForm } from './components/AuthForm';
 import { PhotoUpload } from './components/PhotoUpload';
 import { PhotoGallery } from './components/PhotoGallery';
-import { LogOut, Heart } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 
 function App() {
@@ -36,8 +36,8 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
       </div>
     );
   }
@@ -47,22 +47,20 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100">
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
+      <header className="bg-gray-800 border-b border-gray-700 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center gap-3">
-              <div className="bg-blue-600 p-2 rounded-lg">
-                <Heart className="w-6 h-6 text-white" />
-              </div>
+              <img src="/image.png" alt="FamiliAR" className="w-12 h-12" />
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Memory Care Portal</h1>
-                <p className="text-sm text-gray-600">Preserving precious moments</p>
+                <h1 className="text-xl font-bold text-white">FamiliAR</h1>
+                <p className="text-sm text-gray-400">Memory Care Portal</p>
               </div>
             </div>
             <button
               onClick={handleSignOut}
-              className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition"
+              className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-lg transition"
             >
               <LogOut className="w-4 h-4" />
               <span className="hidden sm:inline">Sign Out</span>
@@ -78,7 +76,7 @@ function App() {
         </div>
       </main>
 
-      <footer className="mt-16 py-6 text-center text-gray-600 text-sm">
+      <footer className="mt-16 py-6 text-center text-gray-400 text-sm">
         <p>Helping families stay connected through memories</p>
       </footer>
     </div>
