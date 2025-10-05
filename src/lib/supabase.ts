@@ -12,7 +12,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 export interface MemoryPhoto {
   id: string;
   image_url: string;
-  audio_url?: string | null;
+  voice_id?: string | null;
   person_name: string;
   location: string;
   event: string;

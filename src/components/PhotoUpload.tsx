@@ -94,28 +94,49 @@ export function PhotoUpload({ onUploadSuccess }: PhotoUploadProps) {
         .from('memories-photos')
         .getPublicUrl(fileName);
 
-      let audioUrl = null;
+      let voiceId = null;
       if (audioBlob) {
-        const audioFileName = `${user.id}/${Date.now()}.webm`;
-        const { error: audioUploadError } = await supabase.storage
-          .from('memories-audio')
-          .upload(audioFileName, audioBlob);
+        const reader = new FileReader();
+        const audioBase64 = await new Promise<string>((resolve, reject) => {
+          reader.onload = () => {
+            const base64 = (reader.result as string).split(',')[1];
+            resolve(base64);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(audioBlob);
+        });
 
-        if (audioUploadError) {
-          console.error('Audio upload error:', audioUploadError);
-        } else {
-          const { data: { publicUrl: audioPublicUrl } } = supabase.storage
-            .from('memories-audio')
-            .getPublicUrl(audioFileName);
-          audioUrl = audioPublicUrl;
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+        const cloneVoiceUrl = `${supabaseUrl}/functions/v1/clone-voice`;
+
+        const response = await fetch(cloneVoiceUrl, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${supabaseKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            audioBlob: audioBase64,
+            name: `${personName} - ${Date.now()}`,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Voice cloning error:', errorData);
+          throw new Error(errorData.error || 'Failed to clone voice');
         }
+
+        const result = await response.json();
+        voiceId = result.voiceId;
       }
 
       const { error: dbError } = await supabase
         .from('memories_photos')
         .insert({
           image_url: publicUrl,
-          audio_url: audioUrl,
+          voice_id: voiceId,
           person_name: personName,
           location,
           event,
